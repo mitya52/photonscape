@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhotonScape</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="no-image">
+
+<div class="header">
+  <span class="logo">PhotonScape</span>
+  <div class="header-btn-group">
+    <button class="header-action-btn" id="uploadBtn" data-tooltip="Open file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </button>
+    <button class="header-action-btn" id="screenshotBtn" data-tooltip="Screenshot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </button>
+    <button class="header-action-btn" id="animateBtn" data-tooltip="Rotate">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+    </button>
+    <button class="header-action-btn" id="recordBtn" data-tooltip="Record video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 7l-7 5 7 5V7z"/>
+        <rect x="1" y="5" width="15" height="14" rx="2"/>
+      </svg>
+    </button>
+    <button class="header-action-btn" id="exportSceneBtn" data-tooltip="Export scene parameters (for external scripts)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    </button>
+  </div>
+  <input type="file" id="fileInput" class="hidden-input" accept=".fits,.fit,.tiff,.tif,.png,.jpg,.jpeg">
+  <div class="header-spacer"></div>
+  <span class="file-info" id="fileInfo"></span>
+</div>
+
+<div class="main">
+  <div class="panel-3d" id="panel3d">
+    <img id="view3d" draggable="false">
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-text">Open or drop an image to begin</div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <div class="loading-text">Generating 3D surface...</div>
+    </div>
+
+    <div class="anim-indicator" id="animIndicator">
+      <svg class="anim-spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+      <span>Turntable</span>
+    </div>
+    <div class="timing" id="timing"></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="controls">
+      <div class="control-section">
+        <div class="section-label">Stretch</div>
+        <div class="radio-group" id="stretchGroup"></div>
+      </div>
+
+      <div class="control-section">
+        <div class="section-label">Z Scale</div>
+        <div class="radio-group" id="zscaleGroup"></div>
+      </div>
+
+      <div class="control-section">
+        <div class="section-label">Max Size</div>
+        <select id="downsampleSelect" class="downsample-select"></select>
+      </div>
+
+      <div class="control-section">
+        <div class="section-label">Z Crop</div>
+        <div class="range-slider" id="zCropSlider">
+          <div class="range-track">
+            <div class="range-fill" id="zCropFill"></div>
+          </div>
+          <input type="range" min="0" max="1000" value="0" class="range-thumb range-thumb-lo" id="zCropLo">
+          <input type="range" min="0" max="1000" value="1000" class="range-thumb range-thumb-hi" id="zCropHi">
+        </div>
+        <div class="range-labels">
+          <span id="zCropLoLabel">0%</span>
+          <span id="zCropHiLabel">100%</span>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <div class="section-label">Display</div>
+        <label class="toggle-label">
+          <input type="checkbox" id="borderToggle" checked>
+          <span class="toggle-switch"></span>
+          <span>Surface border</span>
+        </label>
+      </div>
+
+      <div class="control-section gpu-section" id="gpuSection">
+        <div class="section-label">Rendering</div>
+        <label class="toggle-label">
+          <input type="checkbox" id="gpuToggle">
+          <span class="toggle-switch"></span>
+          <span>GPU acceleration</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="preview-2d">
+      <div class="section-label">2D Preview</div>
+      <div class="preview-wrap" id="previewWrap">
+        <img id="view2d" draggable="false">
+        <canvas id="cropCanvas"></canvas>
+      </div>
+      <div class="preview-hint">Drag to crop &middot; Double-click to reset</div>
+    </div>
+  </div>
+</div>
+
+<!-- Full-page drag overlay -->
+<div class="drag-overlay" id="dragOverlay">
+  <div class="drag-overlay-content">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L12 16M12 2L8 6M12 2L16 6"/>
+      <path d="M2 17L2 19C2 20.1046 2.89543 21 4 21L20 21C21.1046 21 22 20.1046 22 19L22 17"/>
+    </svg>
+    <div class="drag-text">Drop to open</div>
+    <div class="drop-zone-formats">
+      <span class="format-badge">FITS</span>
+      <span class="format-badge">TIFF</span>
+      <span class="format-badge">PNG</span>
+      <span class="format-badge">JPEG</span>
+    </div>
+  </div>
+</div>
+
+<!-- Export dialog -->
+<div class="export-overlay" id="exportOverlay">
+  <div class="export-dialog" id="exportDialog">
+    <div class="export-header">
+      <span class="export-title" id="exportTitle">Export</span>
+      <button class="export-close" id="exportClose">&times;</button>
+    </div>
+    <div class="export-body" id="exportBody"></div>
+    <div class="export-footer">
+      <button class="export-btn export-btn-cancel" id="exportCancel">Cancel</button>
+      <button class="export-btn export-btn-primary" id="exportConfirm">Export</button>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!-- Config injected by server -->
+<script>%%CONFIG_SCRIPT%%</script>
+<script src="/static/app.js"></script>
+</body>
+</html>

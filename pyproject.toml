@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "photonscape"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pyvista",
+    "astropy",
+    "tifffile",
+    "opencv-python-headless",
+    "Pillow",
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+]
+
+[project.scripts]
+photonscape = "photonscape:main"
+
+[tool.setuptools]
+py-modules = ["photonscape"]
