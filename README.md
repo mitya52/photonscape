@@ -2,6 +2,8 @@
 
 Interactive 2.5D surface viewer for astrophotography images. Pixel brightness becomes height — turning flat images into explorable 3D landscapes.
 
+![PhotonScape interface](resources/interface.jpg)
+
 ## Why?
 
 In astrophotography, a 2D image can hide what's really going on. Noise looks fine until you see it as a jagged surface. Gradients become visible as tilted planes. Stacking improvements become obvious as the surface smooths out.
@@ -28,9 +30,27 @@ Requires Python 3.10+.
 | PNG (.png) | Pillow | Standard 8/16-bit |
 | JPEG (.jpg, .jpeg) | Pillow | Standard 8-bit |
 
-## Interface
+## How stacking looks in 2.5D
 
-![PhotonScape interface](resources/interface.jpg)
+Stacking is the core technique in astrophotography — combining multiple exposures to improve signal-to-noise ratio. In a flat 2D view, the difference between 10 and 100 stacked frames can be subtle. In 2.5D, it's obvious: the surface goes from rough and noisy to smooth and defined.
+
+<video src="https://github.com/mitya52/photonscape/raw/master/resources/stacking.mp4" controls width="800"></video>
+
+*1 → 2 → 5 → 10 → 24 → 50 → 100 → 200 stacked frames. Notice how the noise floor flattens and signal structures become cleaner with each step.*
+
+## How processing looks in 2.5D
+
+A typical astrophotography workflow involves multiple processing steps. Here's what they look like as 3D surfaces:
+
+<video src="https://github.com/mitya52/photonscape/raw/master/resources/processing.mp4" controls width="800"></video>
+
+- **Background extraction (BGE)** — initial image has a gradient (tilted surface). After gradient correction, the background flattens — though the resulting image appears greenish, which is expected before color calibration
+- **Color calibration (SPCC)** — Spectrophotometric Color Calibration restores natural colors. In 2.5D, the surface shape doesn't change much, but the color texture shifts to represent true star and nebula colors
+- **Sharpening** — star spikes become more defined in the 2D view. In 2.5D, the difference is minimal — sharpening mostly affects local contrast, not the overall elevation profile
+- **Denoising** — the noise at the background (the bottom of the surface) gets tightened — the floor becomes smoother and more uniform
+- **Star removal** — stars are reduced, but some spikes remain. These aren't stars — they're galaxies and other extended objects that the star removal algorithm correctly preserved
+
+## Interface
 
 ### Header toolbar
 
@@ -70,26 +90,6 @@ Small reference view of the loaded image in the bottom-right. Drag on it to sele
 - **Drag** to rotate the camera around the surface
 - **Scroll** to zoom in/out
 - **Render time** shown in the top-right corner
-
-## How stacking looks in 2.5D
-
-Stacking is the core technique in astrophotography — combining multiple exposures to improve signal-to-noise ratio. In a flat 2D view, the difference between 10 and 100 stacked frames can be subtle. In 2.5D, it's obvious: the surface goes from rough and noisy to smooth and defined.
-
-[Watch stacking video](resources/stacking.mp4)
-
-*1 → 2 → 5 → 10 → 24 → 50 → 100 → 200 stacked frames. Notice how the noise floor flattens and signal structures become cleaner with each step.*
-
-## How processing looks in 2.5D
-
-A typical astrophotography workflow involves multiple processing steps. Here's what they look like as 3D surfaces:
-
-[Watch processing video](resources/processing.mp4)
-
-- **Background extraction (BGE)** — initial image has a gradient (tilted surface). After gradient correction, the background flattens — though the resulting image appears greenish, which is expected before color calibration
-- **Color calibration (SPCC)** — Spectrophotometric Color Calibration restores natural colors. In 2.5D, the surface shape doesn't change much, but the color texture shifts to represent true star and nebula colors
-- **Sharpening** — star spikes become more defined in the 2D view. In 2.5D, the difference is minimal — sharpening mostly affects local contrast, not the overall elevation profile
-- **Denoising** — the noise at the background (the bottom of the surface) gets tightened — the floor becomes smoother and more uniform
-- **Star removal** — stars are reduced, but some spikes remain. These aren't stars — they're galaxies and other extended objects that the star removal algorithm correctly preserved
 
 ## License
 
