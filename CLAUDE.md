@@ -5,6 +5,13 @@
 ## Install & Run
 
 ```
+docker build -t photonscape .
+docker run --rm -p 8182:8182 photonscape
+```
+
+Or with pip:
+
+```
 pip install -e .
 photonscape
 ```

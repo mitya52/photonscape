@@ -12,14 +12,29 @@ PhotonScape gives you a height map representation of your image, where brightnes
 
 ## Install & Run
 
+### Docker
+
+```
+docker build -t photonscape .
+docker run --rm -p 8182:8182 photonscape
+```
+
+With NVIDIA GPU:
+
+```
+docker run --rm --gpus all -p 8182:8182 photonscape
+```
+
+### pip
+
 ```
 pip install -e .
 photonscape
 ```
 
-Opens in browser at `http://localhost:8182`. No CLI arguments — all configuration is in the UI.
-
 Requires Python 3.10+.
+
+Opens in browser at `http://localhost:8182`. No CLI arguments — all configuration is in the UI.
 
 ## Supported formats
 
