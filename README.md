@@ -34,7 +34,7 @@ Requires Python 3.10+.
 
 Stacking is the core technique in astrophotography — combining multiple exposures to improve signal-to-noise ratio. In a flat 2D view, the difference between 10 and 100 stacked frames can be subtle. In 2.5D, it's obvious: the surface goes from rough and noisy to smooth and defined.
 
-<video src="https://github.com/mitya52/photonscape/raw/master/resources/stacking.mp4" controls width="800"></video>
+<video src="https://github.com/user-attachments/assets/02224985-4a8f-4250-9a42-2e7724cb4b5d" controls width="800"></video>
 
 *1 → 2 → 5 → 10 → 24 → 50 → 100 → 200 stacked frames. Notice how the noise floor flattens and signal structures become cleaner with each step.*
 
