@@ -8,6 +8,26 @@ In astrophotography, a 2D image can hide what's really going on. Noise looks fin
 
 PhotonScape gives you a height map representation of your image, where brightness = elevation. This makes it much easier to understand how processing steps like stacking, gradient correction, color calibration, denoising, and star removal actually transform your data — especially if you're just starting out.
 
+## Install & Run
+
+```
+pip install -e .
+photonscape
+```
+
+Opens in browser at `http://localhost:8182`. No CLI arguments — all configuration is in the UI.
+
+Requires Python 3.10+.
+
+## Supported formats
+
+| Format | Library | Notes |
+|--------|---------|-------|
+| FITS (.fits, .fit) | astropy | Auto-detects Bayer pattern (BAYERPAT/COLORTYP headers) for debayering |
+| TIFF (.tiff, .tif) | tifffile | Handles channel-first layout, 16/32-bit depth |
+| PNG (.png) | Pillow | Standard 8/16-bit |
+| JPEG (.jpg, .jpeg) | Pillow | Standard 8-bit |
+
 ## Interface
 
 ![PhotonScape interface](resources/interface.jpg)
@@ -55,7 +75,7 @@ Small reference view of the loaded image in the bottom-right. Drag on it to sele
 
 Stacking is the core technique in astrophotography — combining multiple exposures to improve signal-to-noise ratio. In a flat 2D view, the difference between 10 and 100 stacked frames can be subtle. In 2.5D, it's obvious: the surface goes from rough and noisy to smooth and defined.
 
-<video src="resources/stacking.mp4" controls></video>
+[Watch stacking video](resources/stacking.mp4)
 
 *1 → 2 → 5 → 10 → 24 → 50 → 100 → 200 stacked frames. Notice how the noise floor flattens and signal structures become cleaner with each step.*
 
@@ -63,33 +83,13 @@ Stacking is the core technique in astrophotography — combining multiple exposu
 
 A typical astrophotography workflow involves multiple processing steps. Here's what they look like as 3D surfaces:
 
-<video src="resources/processing.mp4" controls></video>
+[Watch processing video](resources/processing.mp4)
 
 - **Background extraction (BGE)** — initial image has a gradient (tilted surface). After gradient correction, the background flattens — though the resulting image appears greenish, which is expected before color calibration
 - **Color calibration (SPCC)** — Spectrophotometric Color Calibration restores natural colors. In 2.5D, the surface shape doesn't change much, but the color texture shifts to represent true star and nebula colors
 - **Sharpening** — star spikes become more defined in the 2D view. In 2.5D, the difference is minimal — sharpening mostly affects local contrast, not the overall elevation profile
 - **Denoising** — the noise at the background (the bottom of the surface) gets tightened — the floor becomes smoother and more uniform
 - **Star removal** — stars are reduced, but some spikes remain. These aren't stars — they're galaxies and other extended objects that the star removal algorithm correctly preserved
-
-## Supported formats
-
-| Format | Library | Notes |
-|--------|---------|-------|
-| FITS (.fits, .fit) | astropy | Auto-detects Bayer pattern (BAYERPAT/COLORTYP headers) for debayering |
-| TIFF (.tiff, .tif) | tifffile | Handles channel-first layout, 16/32-bit depth |
-| PNG (.png) | Pillow | Standard 8/16-bit |
-| JPEG (.jpg, .jpeg) | Pillow | Standard 8-bit |
-
-## Install & Run
-
-```
-pip install -e .
-photonscape
-```
-
-Opens in browser at `http://localhost:8182`. No CLI arguments — all configuration is in the UI.
-
-Requires Python 3.10+.
 
 ## License
 
