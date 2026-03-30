@@ -42,7 +42,7 @@ Stacking is the core technique in astrophotography — combining multiple exposu
 
 A typical astrophotography workflow involves multiple processing steps. Here's what they look like as 3D surfaces:
 
-<video src="https://github.com/mitya52/photonscape/raw/master/resources/processing.mp4" controls width="800"></video>
+<video src="https://github.com/user-attachments/assets/021e6cdb-bc67-489f-a8a5-5d516c690450" controls width="800"></video>
 
 - **Background extraction (BGE)** — initial image has a gradient (tilted surface). After gradient correction, the background flattens — though the resulting image appears greenish, which is expected before color calibration
 - **Color calibration (SPCC)** — Spectrophotometric Color Calibration restores natural colors. In 2.5D, the surface shape doesn't change much, but the color texture shifts to represent true star and nebula colors
